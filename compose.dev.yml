@@ -1,0 +1,52 @@
+version: '3'
+
+services:
+  database:
+    image: postgres:12-alpine
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: adminchallenge
+      POSTGRES_DB: challengeprojectdev
+    expose:
+      - 5432
+    ports:
+      - 5432:5432
+    volumes:
+      - dbdata:/var/lib/postgresql/data
+
+  migrate:
+    image: challenge
+    depends_on:
+      - database
+    build:
+      context: challenge
+      dockerfile: Dockerfile.dev
+    command: python manage.py migrate
+    environment:
+      DB_NAME: challengeprojectdev
+      DB_USER: adminchallenge
+      DB_PASSWORD: postgres
+      DB_HOST: database
+      DB_PORT: 5432
+      DJANGO_SETTINGS_MODULE: challenge.settings
+  
+  backend:
+    image: challenge
+    depends_on:
+      - database
+    ports:
+      - 4000:80
+    build:
+      context: challenge
+      dockerfile: Dockerfile.dev
+    environment:
+      DB_NAME: challengeprojectdev
+      DB_USER: adminchallenge
+      DB_PASSWORD: postgres
+      DB_HOST: database
+      DB_PORT: 5432
+      DJANGO_SETTINGS_MODULE: challenge.settings
+
+volumes:
+  dbdata:
