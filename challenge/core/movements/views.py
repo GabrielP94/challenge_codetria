@@ -1,5 +1,6 @@
 from django.http import Http404
 from rest_framework import status
+from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -25,18 +26,12 @@ class MovementDetailDelete(APIView):
     """
     This view returns specific client information and allows you to delete it and update it.
     """
-    def get_object(self, pk):
-        try:
-            return Movement.objects.get(pk=pk)
-        except Movement.DoesNotExist:
-            raise Http404
-
     def get(self, request, pk):
-        movement = self.get_object(pk)
+        movement = get_object_or_404(Movement.objects.all(), pk=pk)
         serializer = MovementSerializer(movement)
         return Response(serializer.data)
 
     def delete(self, request, pk):
-        movement = self.get_object(pk)
+        movement = get_object_or_404(Movement.objects.all(), pk=pk)
         movement.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
