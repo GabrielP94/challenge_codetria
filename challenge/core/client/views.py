@@ -16,6 +16,11 @@ from core.models import Client
 class ClientListCreate(APIView):
     """
     This view lists all clients and allows you to create a new one.
+
+    To Create, the JSON structure is:
+
+        {"name": "Nombre Ficticio"}
+
     """
     def get(self, request):
         clients = Client.objects.all()
@@ -36,6 +41,9 @@ class ClientListCreate(APIView):
 class ClientDetailUpdate(APIView):
     """
     This view returns specific client information and allows you to delete it and update it.
+
+     * NOTE: You can update only the client name
+
     """
     def get(self, request, pk):
         client = get_object_or_404(Client.objects.all(), pk=pk)
@@ -66,6 +74,11 @@ class ClientDetailUpdate(APIView):
 class ClientCategoryAssignment(APIView):
     """
     This view allows you to assign a category to a specific client.
+
+    The JSON Structure is:
+
+        {"client": 1, "category": 1}
+
     """
     def post(self, request):
         serializer = CategoryClientRequestSerializer(data=request.data)
