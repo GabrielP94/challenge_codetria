@@ -5,6 +5,7 @@ from core.models import Client, Account, Category, CategoryClient
 
 class ClientSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(read_only=True)
+    name = serializers.CharField(max_length=500, required=True)
 
     class Meta:
         model = Client
