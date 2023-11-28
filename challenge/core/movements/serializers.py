@@ -14,7 +14,6 @@ class MovementSerializer(serializers.ModelSerializer):
         fields = ["id", "account", "movement_type", "amount"]
 
     def validate(self, data):
-        # ToDo: Use this function to validate amount and balance
         balance = get_account_balance(data["account"])
         if data["movement_type"] == "cash_outflow":
             if balance < float(data["amount"]):

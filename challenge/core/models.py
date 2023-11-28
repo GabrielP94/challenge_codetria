@@ -24,7 +24,6 @@ class Category(models.Model):
 
 class Account(models.Model):
     client = models.ForeignKey(Client, on_delete=models.CASCADE)
-    balance = models.FloatField(blank=False, null=False, default=0.0)
 
     def get_total_usd(self):
         dollar_value = get_currencies_values("Dolar Bolsa")["casa"]["compra"].replace(",", ".")

@@ -37,14 +37,8 @@ class ClientDetailUpdate(APIView):
     """
     This view returns specific client information and allows you to delete it and update it.
     """
-    def get_object(self, pk):
-        try:
-            return Client.objects.get(pk=pk)
-        except Client.DoesNotExist:
-            raise Http404
-
     def get(self, request, pk):
-        client = self.get_object(pk)
+        client = get_object_or_404(Client.objects.all(), pk=pk)
         account = Account.objects.filter(client_id=client.id)
         category = CategoryClient.objects.filter(client_id=client.id)
         data = {
@@ -56,7 +50,7 @@ class ClientDetailUpdate(APIView):
         return Response(serializer.data)
 
     def put(self, request, pk):
-        client = self.get_object(pk)
+        client = get_object_or_404(Client.objects.all(), pk=pk)
         serializer = ClientSerializer(client, data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -64,7 +58,7 @@ class ClientDetailUpdate(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, pk):
-        client = self.get_object(pk)
+        client = get_object_or_404(Client.objects.all(), pk=pk)
         client.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 

@@ -39,6 +39,14 @@ class CategoryClientRequestSerializer(serializers.ModelSerializer):
         model = CategoryClient
         fields = ["client", "category"]
 
+    def to_representation(self, instance):
+        rep = super(CategoryClientRequestSerializer, self).to_representation(instance)
+
+        rep["client"] = ClientSerializer(Client.objects.get(pk=rep["client"])).data
+        rep["category"] = CategorySerializer(Category.objects.get(pk=rep["category"])).data
+
+        return rep
+
 
 class FullClientInformationSerializer(serializers.Serializer):
     client = ClientSerializer()
