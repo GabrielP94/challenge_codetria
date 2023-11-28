@@ -5,6 +5,7 @@ from core.models import Client, Account, Category, CategoryClient
 
 class ClientSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(read_only=True)
+    name = serializers.CharField(max_length=500, required=True)
 
     class Meta:
         model = Client
@@ -37,6 +38,14 @@ class CategoryClientRequestSerializer(serializers.ModelSerializer):
     class Meta:
         model = CategoryClient
         fields = ["client", "category"]
+
+    def to_representation(self, instance):
+        rep = super(CategoryClientRequestSerializer, self).to_representation(instance)
+
+        rep["client"] = ClientSerializer(Client.objects.get(pk=rep["client"])).data
+        rep["category"] = CategorySerializer(Category.objects.get(pk=rep["category"])).data
+
+        return rep
 
 
 class FullClientInformationSerializer(serializers.Serializer):
