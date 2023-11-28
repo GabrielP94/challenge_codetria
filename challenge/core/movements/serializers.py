@@ -1,6 +1,7 @@
 from rest_framework import serializers
 
 from core.client.serializers import AccountSerializer
+from core.client.utils import get_account_balance
 from core.models import Account
 from core.models import Movement
 
@@ -14,6 +15,13 @@ class MovementSerializer(serializers.ModelSerializer):
 
     def validate(self, data):
         # ToDo: Use this function to validate amount and balance
+        balance = get_account_balance(data["account"])
+        if data["movement_type"] == "cash_outflow":
+            if balance < float(data["amount"]):
+                raise serializers.ValidationError({
+                    "field_amount": "Your account balance is lower than the amount that you want to extract."
+                }
+                )
 
         return data
 

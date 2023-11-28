@@ -4,11 +4,17 @@ from core.models import Movement
 
 
 def get_account_balance(account_id):
-    cash_in = Movement.objects.filter(account_id=account_id,
-                                      movement_type="cash_inflow").aggregate(Sum('amount'))["amount__sum"]
+    cash_in_movements = Movement.objects.filter(account_id=account_id,
+                                                movement_type="cash_inflow"
+                                                ).aggregate(Sum('amount'))
 
-    cash_out = Movement.objects.filter(account_id=account_id,
-                                       movement_type="cash_outflow").aggregate(Sum('amount'))["amount__sum"]
-    balance = 0.0 if not cash_in else float(cash_in) - 0.0 if not cash_out else float(cash_out)
+    cash_out_movements = Movement.objects.filter(account_id=account_id,
+                                                 movement_type="cash_outflow"
+                                                 ).aggregate(Sum('amount'))
+
+    cash_in = 0.0 if not cash_in_movements["amount__sum"] else float(cash_in_movements["amount__sum"])
+    cash_out = 0.0 if not cash_out_movements["amount__sum"] else float(cash_out_movements["amount__sum"])
+
+    balance = cash_in - cash_out
 
     return balance

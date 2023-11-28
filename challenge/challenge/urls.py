@@ -25,11 +25,11 @@ from core.movements.views import MovementCreate
 from core.movements.views import MovementDetailDelete
 
 urlpatterns = [
-    path('clients/', ClientListCreate.as_view()),
-    path('clients/<int:pk>/', ClientDetailUpdate.as_view()),
-    path('clients/<int:pk>/accounts/', ClientAccountBalance.as_view()),
-    path('clients/categories/', ClientCategoryAssignment.as_view()),
-    path('movements/', MovementCreate.as_view()),
-    path('movements/<int:pk>/', MovementDetailDelete.as_view()),
+    path('clients/', ClientListCreate.as_view(), name="clients"),
+    path('clients/<int:pk>/', ClientDetailUpdate.as_view(), name="clients_detail"),
+    path('clients/<int:pk>/accounts/', ClientAccountBalance.as_view(), name="clients_accounts"),
+    path('clients/categories/', ClientCategoryAssignment.as_view(), name="clients_category"),
+    path('movements/', MovementCreate.as_view(), name="movements"),
+    path('movements/<int:pk>/', MovementDetailDelete.as_view(), name="movements_detail"),
     path('admin/', admin.site.urls),
 ]
